@@ -1,0 +1,16 @@
+# =============================================================================
+#  Grading table of this worksheet.
+#  Every "key = value" pair becomes one row of a two column table which is
+#  placed into the header of the worksheet. Delete this file when no table
+#  should be printed.
+#
+#  _header sets the titles of both columns (separated by a semicolon).
+# =============================================================================
+
+_header = Body;Známka
+
+18 - 20 = 1
+15 - 17 = 2
+11 - 14 = 3
+ 8 - 10 = 4
+ 0 -  7 = 5

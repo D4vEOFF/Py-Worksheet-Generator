@@ -1,0 +1,442 @@
+% =============================================================================
+%  WorkSheet Generator (wsg) -- default worksheet template
+%
+%  Names in double angle brackets are placeholders replaced by the generator
+%  right before the document is compiled. A copy of this file is placed into
+%  every new project, so it can be freely adjusted per project (or replaced
+%  completely with the --header option).
+%
+%  Available placeholders (written here without the brackets on purpose):
+%    SUBJECT TITLE NUMBER SCHOOL CLASS TEACHER YEAR LANGUAGE
+%    PAPER FONTSIZE MARGIN        -- paper dependent settings
+%    SOLUTIONS GRADED CREDENTIALS -- expand to true / false
+%    PACKAGES MACROS              -- input of default-packages / default-macros
+%    GRADING_TABLE                -- built from grading.txt, empty when missing
+%    CONTENT                      -- the worksheet body, i.e. the tasks file
+% =============================================================================
+\documentclass[<<FONTSIZE>>,<<PAPER>>paper]{article}
+
+% -----------------------------------------------------------------------------
+%  Values injected by wsg
+% -----------------------------------------------------------------------------
+\newcommand{\wsgSubject}{<<SUBJECT>>}
+\newcommand{\wsgTitle}{<<TITLE>>}
+\newcommand{\wsgNumber}{<<NUMBER>>}
+\newcommand{\wsgSchool}{<<SCHOOL>>}
+\newcommand{\wsgClass}{<<CLASS>>}
+\newcommand{\wsgTeacher}{<<TEACHER>>}
+\newcommand{\wsgYear}{<<YEAR>>}
+\newcommand{\wsgLanguage}{<<LANGUAGE>>}
+
+\newif\ifwsgSolutions   \wsgSolutions<<SOLUTIONS>>
+\newif\ifwsgGraded      \wsgGraded<<GRADED>>
+\newif\ifwsgCredentials \wsgCredentials<<CREDENTIALS>>
+
+% -----------------------------------------------------------------------------
+%  Packages -- the list lives in default-packages.tex of the project
+% -----------------------------------------------------------------------------
+<<PACKAGES>>
+
+% -----------------------------------------------------------------------------
+%  Colours -- deliberately muted
+% -----------------------------------------------------------------------------
+\definecolor{wsgAccent}{HTML}{45566F}   % slate blue, used for rules and titles
+\definecolor{wsgLight}{HTML}{EDF1F6}    % very light background of the title bar
+\definecolor{wsgMuted}{HTML}{6E7787}    % secondary text
+\definecolor{wsgSolution}{HTML}{2F6B4F} % muted green, solutions only
+\definecolor{wsgRule}{HTML}{9AA5B4}     % answer lines / boxes
+
+% -----------------------------------------------------------------------------
+%  Localised labels
+% -----------------------------------------------------------------------------
+\ifdefstring{\wsgLanguage}{czech}{%
+  \newcommand{\wsgLabelWorksheet}{Pracovní list}
+  \newcommand{\wsgLabelNo}{č.}
+  \newcommand{\wsgLabelTask}{Úloha}
+  \newcommand{\wsgLabelSolution}{Řešení}
+  \newcommand{\wsgLabelSolutionSheet}{ŘEŠENÍ}
+  \newcommand{\wsgLabelName}{Jméno a příjmení}
+  \newcommand{\wsgLabelClass}{Třída}
+  \newcommand{\wsgLabelPoints}{Body}
+  \newcommand{\wsgLabelPointsShort}{b.}
+  \newcommand{\wsgLabelPage}{strana}
+  \newcommand{\wsgLabelStarNote}{%
+    Úlohy označené\ \wsgStarMark{1} jsou náročnější, úlohy označené\
+    \wsgStarMark{2} rozšiřující.}
+  \newcommand{\wsgLabelBloom}{úroveň}
+}{%
+  \newcommand{\wsgLabelWorksheet}{Worksheet}
+  \newcommand{\wsgLabelNo}{no.}
+  \newcommand{\wsgLabelTask}{Task}
+  \newcommand{\wsgLabelSolution}{Solution}
+  \newcommand{\wsgLabelSolutionSheet}{SOLUTIONS}
+  \newcommand{\wsgLabelName}{Name and surname}
+  \newcommand{\wsgLabelClass}{Class}
+  \newcommand{\wsgLabelPoints}{Points}
+  \newcommand{\wsgLabelPointsShort}{p.}
+  \newcommand{\wsgLabelPage}{page}
+  \newcommand{\wsgLabelStarNote}{%
+    Tasks marked\ \wsgStarMark{1} are harder, tasks marked\
+    \wsgStarMark{2} go beyond the syllabus.}
+  \newcommand{\wsgLabelBloom}{level}
+}
+
+% -----------------------------------------------------------------------------
+%  Macros -- the list lives in default-macros.tex of the project
+% -----------------------------------------------------------------------------
+<<MACROS>>
+
+% -----------------------------------------------------------------------------
+%  Source code listings (C, C++, C#, Python, Java, ...)
+% -----------------------------------------------------------------------------
+\definecolor{wsgCodeBg}{HTML}{F6F8FA}
+\definecolor{wsgCodeKey}{HTML}{2B5B84}
+\definecolor{wsgCodeStr}{HTML}{7A5230}
+\definecolor{wsgCodeCom}{HTML}{6E7787}
+
+\lstdefinestyle{wsgcode}{%
+  backgroundcolor=\color{wsgCodeBg},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{wsgCodeKey}\bfseries,
+  stringstyle=\color{wsgCodeStr},
+  commentstyle=\color{wsgCodeCom}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{wsgMuted},
+  numbersep=8pt,
+  frame=single,
+  framesep=4pt,
+  rulecolor=\color{wsgRule},
+  breaklines=true,
+  breakatwhitespace=true,
+  showstringspaces=false,
+  keepspaces=true,
+  tabsize=4,
+  columns=flexible,
+  upquote=true,
+  extendedchars=true,
+  xleftmargin=1.5em,
+  aboveskip=0.8em,
+  belowskip=0.8em,
+  % UTF-8 characters have to be mapped explicitly inside listings
+  literate=%
+    {á}{{\'a}}1 {č}{{\v c}}1 {ď}{{\v d}}1 {é}{{\'e}}1 {ě}{{\v e}}1
+    {í}{{\'i}}1 {ň}{{\v n}}1 {ó}{{\'o}}1 {ř}{{\v r}}1 {š}{{\v s}}1
+    {ť}{{\v t}}1 {ú}{{\'u}}1 {ů}{{\r u}}1 {ý}{{\'y}}1 {ž}{{\v z}}1
+    {Á}{{\'A}}1 {Č}{{\v C}}1 {Ď}{{\v D}}1 {É}{{\'E}}1 {Ě}{{\v E}}1
+    {Í}{{\'I}}1 {Ň}{{\v N}}1 {Ó}{{\'O}}1 {Ř}{{\v R}}1 {Š}{{\v S}}1
+    {Ť}{{\v T}}1 {Ú}{{\'U}}1 {Ů}{{\r U}}1 {Ý}{{\'Y}}1 {Ž}{{\v Z}}1
+}
+\lstset{style=wsgcode}
+
+% Short names for the dialects; Python, C, Java, bash, SQL, HTML and the other
+% languages known to the listings package can be used directly.
+\lstdefinelanguage{csharp}[Sharp]{C}{}
+\lstdefinelanguage{cpp}[ISO]{C++}{}
+\lstdefinelanguage{ansic}[ANSI]{C}{}
+
+% \begin{code}[Python] ... \end{code} -- shorthand for a plain listing
+\lstnewenvironment{code}[1][Python]{\lstset{language=#1}}{}
+
+% -----------------------------------------------------------------------------
+%  Answer space
+% -----------------------------------------------------------------------------
+\newlength{\wsgLineSep}      \setlength{\wsgLineSep}{9mm}
+\newlength{\wsgGridStep}     \setlength{\wsgGridStep}{5mm}
+\newcounter{wsgLineCounter}
+\newcount\wsgGridCols
+\newcount\wsgGridRows
+
+% \wsgAnswerLines{n} -- n ruled lines
+\newcommand{\wsgAnswerLines}[1]{%
+  \par\vspace{0.6em}%
+  \setcounter{wsgLineCounter}{0}%
+  \loop\ifnum\value{wsgLineCounter}<#1\relax
+    \noindent\textcolor{wsgRule}{\rule{\linewidth}{0.4pt}}\par
+    \vspace{\wsgLineSep}%
+    \stepcounter{wsgLineCounter}%
+  \repeat
+  \vspace{-\wsgLineSep}\par\vspace{0.3em}%
+}
+
+% \wsgAnswerDots{n} -- n dotted lines
+\newcommand{\wsgAnswerDots}[1]{%
+  \par\vspace{0.6em}%
+  \setcounter{wsgLineCounter}{0}%
+  \loop\ifnum\value{wsgLineCounter}<#1\relax
+    \noindent\textcolor{wsgRule}{\makebox[\linewidth]{\dotfill}}\par
+    \vspace{\wsgLineSep}%
+    \stepcounter{wsgLineCounter}%
+  \repeat
+  \vspace{-\wsgLineSep}\par\vspace{0.3em}%
+}
+
+% \wsgAnswerBlank{height} -- plain vertical space
+\newcommand{\wsgAnswerBlank}[1]{\par\vspace{#1}\par}
+
+% \wsgAnswerBox{height} -- empty framed box
+\newcommand{\wsgAnswerBox}[1]{%
+  \par\vspace{0.6em}%
+  \noindent\textcolor{wsgRule}{\framebox[\linewidth]{\rule{0pt}{#1}}}%
+  \par\vspace{0.3em}%
+}
+
+% \wsgAnswerGrid{height} -- framed box with a 5 mm square grid
+\newcommand{\wsgAnswerGrid}[1]{%
+  \par\vspace{0.6em}%
+  \begingroup
+  \wsgGridCols=\numexpr\linewidth/\wsgGridStep\relax
+  \wsgGridRows=\numexpr\dimexpr#1\relax/\wsgGridStep\relax
+  \setlength{\unitlength}{\wsgGridStep}%
+  \noindent
+  \begin{picture}(\the\wsgGridCols,\the\wsgGridRows)
+    \textcolor{wsgRule!45}{%
+      \multiput(0,0)(1,0){\numexpr\wsgGridCols+1\relax}{\line(0,1){\the\wsgGridRows}}%
+      \multiput(0,0)(0,1){\numexpr\wsgGridRows+1\relax}{\line(1,0){\the\wsgGridCols}}%
+    }%
+  \end{picture}%
+  \endgroup
+  \par\vspace{0.3em}%
+}
+
+% -----------------------------------------------------------------------------
+%  Task environment
+%
+%    \begin{task}[title=..., points=3, stars=1, bloom=..., answer=lines, lines=5]
+%       statement of the task
+%       \begin{solution}
+%          solution, printed in the solution sheet only
+%       \end{solution}
+%    \end{task}
+%
+%  answer = none | blank | lines | dots | box | grid   (default: none)
+%    lines=<n>    number of lines for answer=lines / answer=dots
+%    space=<len>  height for answer=blank / answer=box / answer=grid
+%    stars=<n>    difficulty, printed as n asterisks behind the number; any
+%                 other value is printed as it stands (stars=+ works too)
+%    bloom=<text> note for the teacher, printed in the solution sheet only
+% -----------------------------------------------------------------------------
+\newcounter{wsgTaskCounter}
+\newcommand{\wsgPointSum}{0}
+\providecommand{\wsgTotalPoints}{?}
+\providecommand{\wsgAnyStars}{false}
+\newcommand{\wsgStarsSeen}{false}
+
+% \wsgStarMark{1} -> *, \wsgStarMark{2} -> **, anything else is printed as is
+\newcommand{\wsgStarMark}[1]{%
+  \textsuperscript{%
+    \ifstrequal{#1}{1}{*}{\ifstrequal{#1}{2}{**}{#1}}%
+  }%
+}
+
+\makeatletter
+\define@key{wsgtask}{title}{\def\wsg@task@title{#1}}
+\define@key{wsgtask}{points}{\def\wsg@task@points{#1}}
+\define@key{wsgtask}{answer}{\def\wsg@task@answer{#1}}
+\define@key{wsgtask}{lines}{\def\wsg@task@lines{#1}}
+\define@key{wsgtask}{space}{\def\wsg@task@space{#1}}
+\define@key{wsgtask}{stars}{\def\wsg@task@stars{#1}}
+\define@key{wsgtask}{bloom}{\def\wsg@task@bloom{#1}}
+
+\newcommand{\wsg@answerspace}{%
+  \ifdefstring{\wsg@task@answer}{blank}{\wsgAnswerBlank{\wsg@task@space}}{}%
+  \ifdefstring{\wsg@task@answer}{lines}{\wsgAnswerLines{\wsg@task@lines}}{}%
+  \ifdefstring{\wsg@task@answer}{dots}{\wsgAnswerDots{\wsg@task@lines}}{}%
+  \ifdefstring{\wsg@task@answer}{box}{\wsgAnswerBox{\wsg@task@space}}{}%
+  \ifdefstring{\wsg@task@answer}{grid}{\wsgAnswerGrid{\wsg@task@space}}{}%
+}
+
+\newenvironment{task}[1][]{%
+  \def\wsg@task@title{}%
+  \def\wsg@task@points{}%
+  \def\wsg@task@answer{none}%
+  \def\wsg@task@lines{4}%
+  \def\wsg@task@space{4cm}%
+  \def\wsg@task@stars{}%
+  \def\wsg@task@bloom{}%
+  \setkeys{wsgtask}{#1}%
+  \stepcounter{wsgTaskCounter}%
+  \ifdefempty{\wsg@task@points}{}{%
+    \xdef\wsgPointSum{\fpeval{\wsgPointSum+\wsg@task@points}}%
+  }%
+  \ifdefempty{\wsg@task@stars}{}{\gdef\wsgStarsSeen{true}}%
+  % Right hand side of the title line: the points and, in the solution sheet,
+  % the note for the teacher.
+  \def\wsg@task@rhs{}%
+  \ifwsgGraded
+    \ifdefempty{\wsg@task@points}{}{%
+      \def\wsg@task@rhs{(\wsg@task@points\,\wsgLabelPointsShort)}}%
+  \fi
+  \ifwsgSolutions
+    \ifdefempty{\wsg@task@bloom}{}{%
+      \ifdefempty{\wsg@task@rhs}{}{\appto\wsg@task@rhs{\quad}}%
+      \appto\wsg@task@rhs{\wsgLabelBloom: \wsg@task@bloom}}%
+  \fi
+  \par\addvspace{1.1em}\needspace{3\baselineskip}%
+  \noindent
+  {\bfseries\color{wsgAccent}\wsgLabelTask~\thewsgTaskCounter
+    \ifdefempty{\wsg@task@stars}{}{%
+      \expandafter\wsgStarMark\expandafter{\wsg@task@stars}}%
+    \ifdefempty{\wsg@task@title}{}{\,--\, \wsg@task@title}}%
+  \ifdefempty{\wsg@task@rhs}{}{%
+    \hfill{\small\color{wsgMuted}\wsg@task@rhs}}%
+  \par\nobreak\vspace{0.35em}%
+  \noindent\ignorespaces
+}{%
+  \ifwsgSolutions\else\wsg@answerspace\fi
+  \par\addvspace{0.4em}%
+}
+\makeatother
+
+% -----------------------------------------------------------------------------
+%  Solution environment
+%
+%  In the solution sheet the content is printed, in the assignment sheet it is
+%  still processed -- so that listings and verbatim material keep working --
+%  but the result is thrown away instead of being placed on the page.
+% -----------------------------------------------------------------------------
+\newsavebox{\wsgDiscardBox}
+
+\newcommand{\wsgSolutionStart}{%
+  \par\vspace{0.5em}%
+  \begingroup\color{wsgSolution}%
+  \noindent{\bfseries\wsgLabelSolution:}\par\nobreak\vspace{0.2em}%
+  \noindent\ignorespaces
+}
+\newcommand{\wsgSolutionEnd}{\par\endgroup\vspace{0.3em}}
+
+\newenvironment{solution}{%
+  \ifwsgSolutions
+    \wsgSolutionStart
+  \else
+    \setbox\wsgDiscardBox=\vbox\bgroup
+    \hbadness=10000 \vbadness=10000 \hfuzz=\maxdimen \vfuzz=\maxdimen
+    \ignorespaces
+  \fi
+}{%
+  \ifwsgSolutions
+    \wsgSolutionEnd
+  \else
+    \par\egroup
+  \fi
+}
+
+% -----------------------------------------------------------------------------
+%  Grading table -- filled from grading.txt
+% -----------------------------------------------------------------------------
+\newcommand{\wsgGradingTable}[3]{%
+  \par\vspace{0.6em}%
+  \noindent
+  \begin{tabular}{|>{\raggedright\arraybackslash}p{0.34\linewidth}|>{\raggedright\arraybackslash}p{0.34\linewidth}|}
+    \hline
+    \textbf{#1} & \textbf{#2}\\
+    \hline
+    #3
+    \hline
+  \end{tabular}%
+  \par\vspace{0.4em}%
+}
+\newcommand{\wsgGradingRow}[2]{#1 & #2\\}
+
+% -----------------------------------------------------------------------------
+%  Values collected during the previous compilation run: the total number of
+%  points printed in the header and whether any task carries a difficulty mark.
+% -----------------------------------------------------------------------------
+\makeatletter
+\newcommand{\wsgSetTotal}[1]{\gdef\wsgTotalPoints{#1}}
+\newcommand{\wsgSetStars}[1]{\gdef\wsgAnyStars{#1}}
+\AtEndDocument{%
+  \if@filesw
+    \immediate\write\@auxout{\string\wsgSetTotal{\wsgPointSum}}%
+    \immediate\write\@auxout{\string\wsgSetStars{\wsgStarsSeen}}%
+  \fi
+  \ifx\wsgTotalPoints\wsgPointSum\else
+    \PackageWarningNoLine{wsg}{Points changed. Rerun to get the total right}%
+  \fi
+  \ifx\wsgAnyStars\wsgStarsSeen\else
+    \PackageWarningNoLine{wsg}{Difficulty marks changed. Rerun the compilation}%
+  \fi
+}
+\makeatother
+
+% -----------------------------------------------------------------------------
+%  Page style
+% -----------------------------------------------------------------------------
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.4pt}
+\renewcommand{\footrule}{\textcolor{wsgRule}{\rule{\linewidth}{0.4pt}}}
+\fancyfoot[L]{\footnotesize\color{wsgMuted}%
+  \wsgSubject
+  \ifdefempty{\wsgTitle}{}{\,--\,\wsgTitle}%
+  \ifwsgSolutions\ \textcolor{wsgSolution}{(\wsgLabelSolution)}\fi}
+\fancyfoot[R]{\footnotesize\color{wsgMuted}\thepage}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em}
+\setlist{topsep=0.2em,itemsep=0.2em,parsep=0pt}
+
+% Headings used to group the tasks of a worksheet into blocks. \needspace keeps
+% a heading from being left alone at the bottom of a page -- the task that
+% follows starts with a page break of its own, so LaTeX cannot prevent it.
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0pt}%
+  {1.8em plus 0.4em minus 0.2em}{0.5em}%
+  {\normalfont\large\bfseries\color{wsgAccent}}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0pt}%
+  {1.3em plus 0.3em minus 0.2em}{0.4em}%
+  {\normalfont\normalsize\bfseries\color{wsgMuted}}}
+\makeatother
+\pretocmd{\section}{\par\needspace{6\baselineskip}}{}{}
+\pretocmd{\subsection}{\par\needspace{5\baselineskip}}{}{}
+
+% -----------------------------------------------------------------------------
+%  Title block of the worksheet
+% -----------------------------------------------------------------------------
+\newcommand{\wsgMakeHeader}{%
+  \noindent\textcolor{wsgAccent}{\rule{\linewidth}{1.2pt}}\par\vspace{0.3em}%
+  \noindent
+  \begin{minipage}[b]{0.62\linewidth}
+    \ifdefempty{\wsgSchool}{}{{\footnotesize\color{wsgMuted}\wsgSchool}\par}%
+    {\large\bfseries\color{wsgAccent}\wsgSubject}%
+  \end{minipage}%
+  \hfill
+  \begin{minipage}[b]{0.36\linewidth}
+    \raggedleft\footnotesize\color{wsgMuted}%
+    \ifdefempty{\wsgClass}{}{\wsgClass\par}%
+    \ifdefempty{\wsgYear}{}{\wsgYear}%
+  \end{minipage}%
+  \par\vspace{0.5em}%
+  \noindent\colorbox{wsgLight}{%
+    \begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}
+      \vspace{0.35em}%
+      {\large\bfseries\wsgLabelWorksheet\ \wsgLabelNo~\wsgNumber}%
+      \ifdefempty{\wsgTitle}{}{\ \textbar\ {\large\wsgTitle}}%
+      \ifwsgSolutions\hfill\textcolor{wsgSolution}{\bfseries\footnotesize\wsgLabelSolutionSheet}\fi
+      \vspace{0.35em}%
+    \end{minipage}}%
+  \par\vspace{0.6em}%
+  \ifwsgSolutions\else
+    \ifboolexpr{bool{wsgCredentials} or bool{wsgGraded}}{%
+      \noindent
+      \ifwsgCredentials
+        \wsgLabelName:~\textcolor{wsgRule}{\rule[-0.35em]{0.45\linewidth}{0.4pt}}%
+      \fi
+      \ifwsgGraded
+        \hfill\wsgLabelPoints:~\textcolor{wsgRule}{\rule[-0.35em]{1.6cm}{0.4pt}}\,/\,\wsgTotalPoints
+      \fi
+      \par\vspace{0.4em}%
+    }{}%
+  \fi
+  <<GRADING_TABLE>>%
+  \ifdefstring{\wsgAnyStars}{true}{%
+    \noindent{\footnotesize\color{wsgMuted}\wsgLabelStarNote}\par\vspace{0.4em}%
+  }{}%
+  \noindent\textcolor{wsgRule}{\rule{\linewidth}{0.4pt}}\par\vspace{0.8em}%
+}
+
+% =============================================================================
+\begin{document}
+\wsgMakeHeader
+<<CONTENT>>
+\end{document}

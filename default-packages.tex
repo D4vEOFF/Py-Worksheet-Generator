@@ -1,0 +1,92 @@
+% =============================================================================
+%  WorkSheet Generator (wsg) -- default package list
+%
+%  Everything a worksheet may reasonably need is loaded here. A copy of this
+%  file is placed into every new project (wsg new), so the list can be edited
+%  per project without touching the installation.
+%
+%  The file is pulled in by the header template through the <<PACKAGES>>
+%  placeholder and is itself run through the placeholder substitution, which
+%  is why LANGUAGE, PAPER and MARGIN may be used below.
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+%  Encoding, language and typography
+% -----------------------------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+% provide=* lets recent versions of babel build the language from its own
+% data even when the old <language>.ldf file is missing from the installation.
+\usepackage[provide=*,<<LANGUAGE>>]{babel}
+\usepackage{microtype}
+\usepackage{csquotes}
+
+% -----------------------------------------------------------------------------
+%  Page layout -- the values depend on the paper size chosen by wsg
+% -----------------------------------------------------------------------------
+\usepackage[<<PAPER>>paper,margin=<<MARGIN>>,headheight=14pt,footskip=1.1\baselineskip]{geometry}
+
+% -----------------------------------------------------------------------------
+%  Mathematics
+% -----------------------------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{mathtools}
+
+% -----------------------------------------------------------------------------
+%  Colours, graphics and diagrams
+% -----------------------------------------------------------------------------
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,automata,bending,calc,decorations.pathreplacing,
+  fit,matrix,positioning,shapes.geometric}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% -----------------------------------------------------------------------------
+%  Tables, lists and columns
+% -----------------------------------------------------------------------------
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{multicol}
+
+% -----------------------------------------------------------------------------
+%  Floats and captions
+% -----------------------------------------------------------------------------
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% -----------------------------------------------------------------------------
+%  Programming helpers used by the header template and by the macros
+% -----------------------------------------------------------------------------
+\usepackage{etoolbox}
+\usepackage{keyval}
+\usepackage{xparse}
+\usepackage{environ}
+\usepackage{xstring}
+\usepackage{pifont}
+\usepackage{needspace}
+
+% -----------------------------------------------------------------------------
+%  Boxes, header and footer
+% -----------------------------------------------------------------------------
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% -----------------------------------------------------------------------------
+%  Source code
+% -----------------------------------------------------------------------------
+\usepackage{listings}
+
+% -----------------------------------------------------------------------------
+%  Links -- loaded last on purpose
+% -----------------------------------------------------------------------------
+\usepackage[hidelinks]{hyperref}

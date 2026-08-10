@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Pomocné soubory překladu LaTeXu
+wsg-build/
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Editory / OS
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

@@ -1,0 +1,49 @@
+% =============================================================================
+%  Body of the worksheet "<<TITLE>>".
+%  Only the content of the document belongs here -- no preamble, no
+%  \begin{document}. Everything around is supplied by the header template.
+%
+%  \begin{task}[title=..., points=..., stars=..., bloom=...,
+%               answer=..., lines=..., space=...]
+%      answer = none | blank | lines | dots | box | grid   (default: none)
+%      lines  = number of lines used by answer=lines and answer=dots
+%      space  = height used by answer=blank, answer=box and answer=grid
+%      stars  = 1 or 2 -- difficulty printed behind the number of the task
+%      bloom  = note for the teacher, printed in the solution sheet only
+%
+%  Note: \end{code} and \end{lstlisting} have to start at the beginning of a
+%  line, otherwise the indentation is printed as an extra line of the listing.
+% =============================================================================
+
+\begin{task}[title=Zahřívací otázka, points=2, bloom=porozumění,
+             answer=lines, lines=3]
+  Vysvětlete vlastními slovy, k čemu slouží cyklus \texttt{for}.
+
+  \begin{solution}
+    Slouží k opakovanému provedení bloku příkazů pro každý prvek sekvence.
+  \end{solution}
+\end{task}
+
+\begin{task}[title=Rozbor kódu, points=3, bloom=analýza, answer=dots, lines=2]
+  Co vypíše následující program?
+
+  \begin{code}[Python]
+for i in range(3):
+    print(i * i)
+\end{code}
+
+  \begin{solution}
+    Vypíše čísla 0, 1 a 4, každé na samostatný řádek.
+  \end{solution}
+\end{task}
+
+\begin{task}[points=5, stars=1, bloom=tvorba, answer=box, space=5cm]
+  Napište program, který vypíše všechna sudá čísla od 1 do 20.
+
+  \begin{solution}
+    \begin{code}[Python]
+for i in range(2, 21, 2):
+    print(i)
+\end{code}
+  \end{solution}
+\end{task}

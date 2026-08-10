@@ -1,0 +1,31 @@
+# =============================================================================
+#  WorkSheet Generator -- worksheet configuration
+# =============================================================================
+
+# Number of the worksheet, printed in the header.
+number      = <<NUMBER>>
+
+# Title / topic of the worksheet.
+title       = <<TITLE>>
+
+# File containing the body of the worksheet (relative to this folder).
+tasks       = tasks.tex
+
+# yes -> points are printed next to every task and a box for the
+#        total score is added into the header
+graded      = <<GRADED>>
+
+# yes -> a separate solution sheet (<name>-solution.pdf) is compiled as well
+solution    = <<SOLUTION>>
+
+# yes -> a line for the name and surname is printed into the header
+credentials = <<CREDENTIALS>>
+
+# Grading table printed into the header. The file is a plain "key = value"
+# list; when it does not exist, no table is printed.
+grading     = grading.txt
+
+# Optional -- override the project files for this worksheet only.
+# header    = my-header.tex
+# packages  = my-packages.tex
+# macros    = my-macros.tex

@@ -1,0 +1,22 @@
+# =============================================================================
+#  WorkSheet Generator -- project configuration
+#  Simple "key = value" file. Lines starting with # or ; are comments.
+# =============================================================================
+
+# Name of the subject, printed in the header of every worksheet.
+subject  = <<SUBJECT>>
+
+# Optional values -- when left empty they are not printed at all.
+school   = <<SCHOOL>>
+class    = <<CLASS>>
+teacher  = <<TEACHER>>
+year     = <<YEAR>>
+
+# Template, package list and macros used for all worksheets of this project.
+# Relative paths are resolved against this folder.
+header   = default-header.tex
+packages = default-packages.tex
+macros   = default-macros.tex
+
+# Language of the generated documents: czech | english
+language = czech

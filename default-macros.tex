@@ -1,0 +1,175 @@
+% =============================================================================
+%  WorkSheet Generator (wsg) -- default macros
+%
+%  Mathematical notation shared by the worksheets. The set is taken from the
+%  lecture notes of Applied Mathematics (github.com/D4vEOFF/AM-skripta) so
+%  that a task can be copied from the notes into a worksheet unchanged.
+%
+%  A copy of this file is placed into every new project (wsg new) and is
+%  pulled in by the header template through the <<MACROS>> placeholder --
+%  after the packages and before the worksheet machinery. Nothing that belongs
+%  to the look of the sheet (task, solution, page style) is defined here.
+% =============================================================================
+
+% -----------------------------------------------------------------------------
+%  Quotation marks of the current language: \enquote{...}
+%
+%  csquotes can also turn " into an active character which opens and closes
+%  the quotation automatically. It is left switched off on purpose -- an active
+%  quote clashes with verbatim material and breaks inside the discarded
+%  solutions of the assignment sheet. Enable it per project if you want it:
+%
+%    \MakeOuterQuote{"}
+% -----------------------------------------------------------------------------
+
+% -----------------------------------------------------------------------------
+%  Number sets and basic notation
+% -----------------------------------------------------------------------------
+\DeclareDocumentCommand{\R}{}{\mathbb{R}}
+\DeclareDocumentCommand{\C}{}{\mathbb{C}}
+\DeclareDocumentCommand{\N}{}{\mathbb{N}}
+\DeclareDocumentCommand{\Q}{}{\mathbb{Q}}
+\DeclareDocumentCommand{\Z}{}{\mathbb{Z}}
+\DeclareDocumentCommand{\F}{}{\mathbb{F}}
+
+\renewcommand{\emptyset}{\varnothing}
+
+\DeclareDocumentCommand{\set}{m}{\left\{#1\right\}}
+\DeclareDocumentCommand{\powset}{m}{\mathcal{P}(#1)}
+\DeclareDocumentCommand{\sizeof}{m}{\left| #1 \right|}
+\DeclareDocumentCommand{\abs}{m}{\left|\,#1\,\right|}
+\DeclareDocumentCommand{\setcomplement}{m}{\ensuremath{{#1}^\mathrm{c}}}
+% Separator inside a set: \set{x\in\R\admid x>0}
+\DeclareDocumentCommand{\admid}{}{\mathrel{:}}
+% Solution set of a system of equations
+\DeclareDocumentCommand{\solutions}{m}{\left[K=\left\{#1\right\}\right]}
+
+\newcommand{\map}[3]{\ensuremath{#1:#2\rightarrow #3}}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\hmid}{\mathrel{\rule[0.6ex]{1.2em}{0.4pt}}}
+\DeclareDocumentCommand{\degre}{}{\ensuremath{^\circ}}
+
+% -----------------------------------------------------------------------------
+%  Operators
+% -----------------------------------------------------------------------------
+\DeclareMathOperator{\tg}{tg}
+\DeclareMathOperator{\cotg}{cotg}
+\DeclareMathOperator{\character}{char}
+\DeclareMathOperator{\id}{id}
+\DeclareMathOperator{\dom}{dom}
+\DeclareMathOperator{\image}{Im}
+\DeclareMathOperator{\kernel}{Ker}
+\DeclareMathOperator{\Hom}{Hom}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\bigOmega}{\Omega}
+
+% Logic gates
+\DeclareMathOperator{\NOT}{NOT}
+\DeclareMathOperator{\AND}{AND}
+\DeclareMathOperator{\NAND}{NAND}
+\DeclareMathOperator{\OR}{OR}
+\DeclareMathOperator{\NOR}{NOR}
+\DeclareMathOperator{\XOR}{XOR}
+
+% -----------------------------------------------------------------------------
+%  Linear algebra
+% -----------------------------------------------------------------------------
+\DeclareMathOperator{\Dim}{dim}
+\DeclareMathOperator{\Span}{span}
+\DeclareMathOperator{\Kan}{kan}
+\DeclareMathOperator{\REF}{REF}
+\DeclareMathOperator{\RREF}{RREF}
+\DeclareMathOperator{\rank}{rank}
+\DeclareMathOperator{\rowspace}{\mathcal{R}}
+\DeclareMathOperator{\colspace}{\mathcal{S}}
+
+\DeclareDocumentCommand{\matrow}{ m m }{\ensuremath{{#1}_{#2*}}}
+\DeclareDocumentCommand{\matcol}{ m m }{\ensuremath{{#1}_{*#2}}}
+\DeclareDocumentCommand{\transpose}{ m }{\ensuremath{{#1^{\top}}}}
+
+% Coordinates with respect to a basis and the matrix of a homomorphism
+\DeclareDocumentCommand{\coord}{ m m }{\ensuremath{\left[#1\right]_{#2}}}
+\DeclareDocumentCommand{\hommat}{ m m m }{\ensuremath{{}_{#1}\!\left[#2\right]_{#3}}}
+
+% -----------------------------------------------------------------------------
+%  Error correcting codes
+% -----------------------------------------------------------------------------
+\DeclareDocumentCommand{\hweight}{m}{\ensuremath{w\!\left(#1\right)}}
+\DeclareDocumentCommand{\hdist}{mm}{\ensuremath{d\!\left(#1,#2\right)}}
+\DeclareDocumentCommand{\mindist}{m}{\ensuremath{d\!\left(#1\right)}}
+
+% -----------------------------------------------------------------------------
+%  Marks and highlighting
+% -----------------------------------------------------------------------------
+\DeclareDocumentCommand{\cmark}{}{\ding{51}}
+\DeclareDocumentCommand{\xmark}{}{\ding{55}}
+\NewDocumentCommand{\markred}{m}{\textcolor{red}{#1}}
+\NewDocumentCommand{\markblue}{m}{\textcolor{blue}{#1}}
+\NewDocumentCommand{\todo}{m}{\textcolor{red}{\textbf{TODO:} #1}}
+\DeclareDocumentCommand{\rightnote}{m}{\hspace*{\fill} $\triangleleft$ \textit{#1}}
+
+% A circled symbol that keeps the size of its content
+\makeatletter
+\newcommand{\circled}[1]{\mathpalette\circled@{#1}}
+\newcommand{\circled@}[2]{%
+  \tikz[baseline=(X.base)]{%
+    \node[inner sep=0pt, outer sep=0pt] (X) {$#1#2$};
+    \begin{scope}[overlay]
+      \node[draw, circle, fit=(X), inner sep=0.35ex] {};
+    \end{scope}
+  }%
+}
+\makeatother
+
+% -----------------------------------------------------------------------------
+%  Statement of a computational problem
+% -----------------------------------------------------------------------------
+\DeclareDocumentCommand{\problem}{mmm}{%
+  \begingroup
+  \setlength{\fboxsep}{3mm}%
+  \fbox{%
+    \begin{minipage}{0.65\linewidth}
+      \textsc{#1}\\[3mm]
+      \indent\textbf{Vstup:} #2\\[3mm]
+      \indent\textbf{Výstup:} #3
+    \end{minipage}%
+  }%
+  \endgroup
+}
+
+% -----------------------------------------------------------------------------
+%  Statements -- useful when a definition has to be recalled on the sheet
+% -----------------------------------------------------------------------------
+\theoremstyle{definition}
+\newtheorem{definition}{Definice}
+\newtheorem*{definition*}{Definice}
+\newtheorem{theorem}{Věta}
+\newtheorem*{theorem*}{Věta}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Tvrzení}
+\newtheorem{corollary}[theorem]{Důsledek}
+\newtheorem{example}{Příklad}
+\newtheorem*{example*}{Příklad}
+\newtheorem{remark}{Poznámka}
+\newtheorem*{remark*}{Poznámka}
+\newtheorem*{symboldef}{Značení}
+\AtBeginEnvironment{remark}{\footnotesize}
+
+% -----------------------------------------------------------------------------
+%  TikZ: vertices and edges of a graph
+% -----------------------------------------------------------------------------
+\tikzset{
+  vertex/.style={thick,draw,circle,minimum size=4mm,inner sep=1pt,
+    outer sep=1pt,align=center},
+  vertexplain/.style={minimum size=4mm,inner sep=1pt,outer sep=1pt,align=center},
+  verteximg/.style={draw,circle,minimum size=4mm,inner sep=0pt,
+    outer sep=1pt,align=center,clip},
+  verteximgplain/.style={minimum size=4mm,inner sep=0pt,outer sep=1pt,align=center},
+  edge/.style={thick,>=Stealth},
+  diredge/.style={thick,->,>=Stealth}
+}
