@@ -13,6 +13,7 @@ zadání pro studenty a volitelně jako řešení pro vyučujícího.
 * seznam balíčků a matematická makra jsou dva běžné soubory `.tex` kopírované
   do každého nového projektu, takže je lze rozšiřovat pro každý projekt zvlášť
 * `--a5` umístí dvě shodné kopie ve formátu A5 na jeden list A4 a šetří papír
+* `--no-answer-space` vysází zadání bez místa na odpověď
 
 Vyžaduje **Python 3.8+** a distribuci TeXu s **pdflatex** (TeX Live, MiKTeX).
 Je-li k dispozici `latexmk`, použije se; jinak se `pdflatex` spustí třikrát.
@@ -152,6 +153,7 @@ Přeloží celý projekt, nebo jen uvedené pracovní listy -- `wsg build 3`,
 | `--packages <soubor>` | pro tento běh použije jiný seznam balíčků |
 | `--macros <soubor>` | pro tento běh použije jiný soubor s makry |
 | `--no-solution` | vysází pouze zadání |
+| `--no-answer-space` | zadání bez místa na odpověď (volba `answer` se ignoruje) |
 | `--a5` | dvě shodné kopie A5 každého listu na jedné stránce A4 |
 | `--keep-aux` | ponechá pomocné soubory překladu |
 | `-v, --verbose` | vypíše výstup překladu LaTeXu |
@@ -240,6 +242,10 @@ for i in range(3):
 | `answer` | místo ponechané na odpověď: `none` (výchozí), `blank`, `lines`, `dots`, `box`, `grid` |
 | `lines` | počet řádků pro `answer=lines` a `answer=dots` (výchozí 4) |
 | `space` | výška pro `answer=blank`, `answer=box` a `answer=grid` (výchozí 4cm) |
+
+Místo na odpověď se nesází do listu s řešením a lze je vypnout i v zadání
+volbou `wsg build --no-answer-space`; hodí se pro zadání, kde studenti píší
+na vlastní papír, nebo pro úsporný tisk.
 
 Úlohy se číslují automaticky. Body se tisknou jen u bodovaného pracovního
 listu a jejich součet se doplní do hlavičky.

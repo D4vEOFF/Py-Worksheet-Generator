@@ -29,6 +29,7 @@ class BuildOptions:
     packages: str = ""
     macros: str = ""
     solutions: bool = True
+    answer_space: bool = True
     a5: bool = False
     keep_aux: bool = False
     verbose: bool = False
@@ -175,6 +176,7 @@ def _placeholder_values(
         "SOLUTIONS": "true" if solution else "false",
         "GRADED": "true" if worksheet.graded else "false",
         "CREDENTIALS": "true" if worksheet.credentials else "false",
+        "ANSWER_SPACE": "true" if options.answer_space else "false",
         "GRADING_TABLE": grading,
         # Filled in by build_worksheet once the two files have been written.
         "PACKAGES": "",
