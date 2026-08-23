@@ -10,6 +10,7 @@
 %    SUBJECT TITLE NUMBER SCHOOL CLASS TEACHER YEAR LANGUAGE
 %    PAPER FONTSIZE MARGIN        -- paper dependent settings
 %    SOLUTIONS GRADED CREDENTIALS -- expand to true / false
+%    ANSWER_SPACE                 -- true / false, false drops the answer space
 %    PACKAGES MACROS              -- input of default-packages / default-macros
 %    GRADING_TABLE                -- built from grading.txt, empty when missing
 %    CONTENT                      -- the worksheet body, i.e. the tasks file
@@ -31,6 +32,7 @@
 \newif\ifwsgSolutions   \wsgSolutions<<SOLUTIONS>>
 \newif\ifwsgGraded      \wsgGraded<<GRADED>>
 \newif\ifwsgCredentials \wsgCredentials<<CREDENTIALS>>
+\newif\ifwsgAnswerSpace \wsgAnswerSpace<<ANSWER_SPACE>>
 
 % -----------------------------------------------------------------------------
 %  Packages -- the list lives in default-packages.tex of the project
@@ -210,6 +212,8 @@
 %    \end{task}
 %
 %  answer = none | blank | lines | dots | box | grid   (default: none)
+%    the answer space is left out in the solution sheet and whenever the
+%    build was started with --no-answer-space
 %    lines=<n>    number of lines for answer=lines / answer=dots
 %    space=<len>  height for answer=blank / answer=box / answer=grid
 %    stars=<n>    difficulty, printed as n asterisks behind the number; any
@@ -311,7 +315,7 @@
   \par\nobreak\vspace{0.5em}%
   \noindent\ignorespaces
 }{%
-  \ifwsgSolutions\else\wsg@answerspace\fi
+  \ifwsgSolutions\else\ifwsgAnswerSpace\wsg@answerspace\fi\fi
   \par\addvspace{0.6em}%
 }
 \makeatother
