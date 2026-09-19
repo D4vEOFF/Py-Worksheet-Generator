@@ -13,6 +13,8 @@
 %    ANSWER_SPACE                 -- true / false, false drops the answer space
 %    RESULTS                      -- true / false, false drops the results
 %                                    boxes from the assignment sheet
+%    NUMBERED                     -- true / false, false drops the line
+%                                    "Worksheet no. N" above the title
 %    PACKAGES MACROS              -- input of default-packages / default-macros
 %    GRADING_TABLE                -- built from grading.txt, empty when missing
 %    CONTENT                      -- the worksheet body, i.e. the tasks file
@@ -36,6 +38,7 @@
 \newif\ifwsgCredentials \wsgCredentials<<CREDENTIALS>>
 \newif\ifwsgAnswerSpace \wsgAnswerSpace<<ANSWER_SPACE>>
 \newif\ifwsgResults     \wsgResults<<RESULTS>>
+\newif\ifwsgNumbered    \wsgNumbered<<NUMBERED>>
 
 % -----------------------------------------------------------------------------
 %  Packages -- the list lives in default-packages.tex of the project
@@ -525,10 +528,13 @@
 %  Title block -- flush left, heavy rule under the title
 % -----------------------------------------------------------------------------
 \newcommand{\wsgMakeHeader}{%
-  \noindent{\scriptsize\color{wsgMuted}%
-    \MakeUppercase{\wsgLabelWorksheet\ \wsgLabelNo~\wsgNumber}%
-    \ifdefempty{\wsgSchool}{}{\hfill\MakeUppercase{\wsgSchool}}}%
-  \par\vspace{0.3em}%
+  % the line above the title disappears once it has nothing to show
+  \ifboolexpr{bool{wsgNumbered} or not test{\ifdefempty{\wsgSchool}}}{%
+    \noindent{\scriptsize\color{wsgMuted}%
+      \ifwsgNumbered\MakeUppercase{\wsgLabelWorksheet\ \wsgLabelNo~\wsgNumber}\fi
+      \ifdefempty{\wsgSchool}{}{\hfill\MakeUppercase{\wsgSchool}}}%
+    \par\vspace{0.3em}%
+  }{}%
   \noindent{\fontsize{22}{24}\selectfont\bfseries
     \ifdefempty{\wsgTitle}{\wsgSubject}{\wsgTitle}}%
   \par\vspace{0.4em}%

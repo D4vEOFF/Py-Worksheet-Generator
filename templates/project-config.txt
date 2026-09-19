@@ -20,3 +20,7 @@ macros   = default-macros.tex
 
 # Language of the generated documents: czech | english
 language = czech
+
+# yes -> "Pracovní list č. N" / "Worksheet no. N" is printed above the title
+#        of every worksheet; no -> the line is left out, as with --no-number
+numbered = yes

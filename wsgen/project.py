@@ -160,6 +160,10 @@ class Project:
     def language(self) -> str:
         return self.config.get("language", "czech").strip().lower() or "czech"
 
+    @property
+    def numbered(self) -> bool:
+        return as_bool(self.config.get("numbered", "yes"), True)
+
     def value(self, key: str) -> str:
         return self.config.get(key, "").strip()
 

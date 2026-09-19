@@ -31,6 +31,7 @@ class BuildOptions:
     solutions: bool = True
     answer_space: bool = True
     results: bool = True
+    number: bool = True
     a5: bool = False
     keep_aux: bool = False
     verbose: bool = False
@@ -68,6 +69,10 @@ def build_worksheet(project: Project, worksheet: Worksheet, options: BuildOption
     template = read_text(header)
     if "<<CONTENT>>" not in template:
         raise WsgError(f"the header template {header} does not contain the <<CONTENT>> placeholder")
+    # A header copied into the project before the option existed would print
+    # the number anyway -- say so instead of ignoring the request silently.
+    if not _numbered(project, options) and "<<NUMBERED>>" not in template:
+        warn(f"the header template {header} has no <<NUMBERED>> placeholder, the worksheet number is printed anyway")
 
     packages = project.file_path("packages", worksheet, options.packages)
     macros = project.file_path("macros", worksheet, options.macros)
@@ -179,6 +184,7 @@ def _placeholder_values(
         "CREDENTIALS": "true" if worksheet.credentials else "false",
         "ANSWER_SPACE": "true" if options.answer_space else "false",
         "RESULTS": "true" if options.results else "false",
+        "NUMBERED": "true" if _numbered(project, options) else "false",
         "GRADING_TABLE": grading,
         # Filled in by build_worksheet once the two files have been written.
         "PACKAGES": "",
@@ -187,3 +193,8 @@ def _placeholder_values(
     }
     values.update(PAPER_SETUP["a5" if options.a5 else "a4"])
     return values
+
+
+def _numbered(project: Project, options: BuildOptions) -> bool:
+    """Whether the "Worksheet no. N" line is printed above the title."""
+    return project.numbered and options.number

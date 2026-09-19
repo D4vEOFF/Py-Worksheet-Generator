@@ -17,6 +17,8 @@ zadání pro studenty a volitelně jako řešení pro vyučujícího.
 * `--a5` umístí dvě shodné kopie ve formátu A5 na jeden list A4 a šetří papír
 * `--no-answer-space` vysází zadání bez místa na odpověď, `--no-results` bez
   výsledků
+* `--no-number` nebo `numbered = no` v nastavení projektu vynechá nad názvem
+  listu řádek „Pracovní list č. N“
 
 Vyžaduje **Python 3.8+** a distribuci TeXu s **pdflatex** (TeX Live, MiKTeX).
 Je-li k dispozici `latexmk`, použije se; jinak se `pdflatex` spustí třikrát.
@@ -158,6 +160,7 @@ Přeloží celý projekt, nebo jen uvedené pracovní listy -- `wsg build 3`,
 | `--no-solution` | vysází pouze zadání |
 | `--no-answer-space` | zadání bez místa na odpověď (volba `answer` se ignoruje) |
 | `--no-results` | zadání bez rámečků s výsledky (list s řešením je obsahuje vždy) |
+| `--no-number` | bez řádku „Pracovní list č. N“ nad názvem listu (stejně jako `numbered = no`) |
 | `--a5` | dvě shodné kopie A5 každého listu na jedné stránce A4 |
 | `--keep-aux` | ponechá pomocné soubory překladu |
 | `-v, --verbose` | vypíše výstup překladu LaTeXu |
@@ -193,6 +196,7 @@ znakem `#` nebo `;` jsou komentáře.
 | `packages` | seznam balíčků projektu (výchozí `default-packages.tex`) |
 | `macros` | soubor s makry projektu (výchozí `default-macros.tex`) |
 | `language` | `czech` nebo `english`; nastavuje babel a tištěné popisky (výchozí `czech`) |
+| `numbered` | `yes` -> nad názvem listu se tiskne „Pracovní list č. N“ (výchozí); `no` -> řádek se vynechá jako při `wsg build --no-number` |
 
 `teacher` výchozí šablona netiskne, pouze jí ho zpřístupňuje jako
 `\wsgTeacher`.
@@ -374,6 +378,7 @@ vloží do každého nového projektu, takže každý projekt může vypadat jin
 | `<<PAPER>>` `<<FONTSIZE>>` `<<MARGIN>>` | nastavení podle formátu papíru (A4 / A5) |
 | `<<SOLUTIONS>>` `<<GRADED>>` `<<CREDENTIALS>>` | `true` / `false`, používají je `\ifwsgSolutions` a spol. |
 | `<<ANSWER_SPACE>>` `<<RESULTS>>` | `true` / `false`, `false` při `--no-answer-space` / `--no-results` |
+| `<<NUMBERED>>` | `true` / `false`, `false` při `--no-number` nebo `numbered = no` |
 | `<<PACKAGES>>` `<<MACROS>>` | `\input` seznamu balíčků a maker |
 | `<<GRADING_TABLE>>` | tabulka sestavená z `grading.txt`, prázdná, pokud soubor chybí |
 | `<<CONTENT>>` | tělo pracovního listu |
