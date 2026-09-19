@@ -3,20 +3,30 @@
 %  Only the content of the document belongs here -- no preamble, no
 %  \begin{document}. Everything around is supplied by the header template.
 %
-%  \begin{task}[title=..., points=..., stars=..., bloom=...,
+%  \begin{task}[title=..., points=..., stars=...,
 %               answer=..., lines=..., space=...]
 %      answer = none | blank | lines | dots | box | grid   (default: none)
 %      lines  = number of lines used by answer=lines and answer=dots
 %      space  = height used by answer=blank, answer=box and answer=grid
 %      stars  = 1 or 2 -- difficulty printed behind the number of the task
-%      bloom  = note for the teacher, printed in the solution sheet only
+%
+%  \begin{solution} ... \end{solution}     printed in the solution sheet only
+%  \begin{results} ... \end{results}       short results, printed in both
+%                                          sheets unless --no-results is used;
+%                                          an enumerate inside runs inline
+%  \begin{reminder}[title] ... \end{reminder}
+%  \begin{note}[title] ... \end{note}      yellow boxes printed in both sheets
 %
 %  Note: \end{code} and \end{lstlisting} have to start at the beginning of a
 %  line, otherwise the indentation is printed as an extra line of the listing.
 % =============================================================================
 
-\begin{task}[title=Zahřívací otázka, points=2, bloom=porozumění,
-             answer=lines, lines=3]
+\begin{reminder}[Cyklus for]
+  Cyklus \texttt{for} provede tělo cyklu jednou pro každý prvek sekvence,
+  \texttt{range(n)} vytvoří sekvenci čísel $0, 1, \dots, n-1$.
+\end{reminder}
+
+\begin{task}[title=Zahřívací otázka, points=2, answer=lines, lines=3]
   Vysvětlete vlastními slovy, k čemu slouží cyklus \texttt{for}.
 
   \begin{solution}
@@ -24,20 +34,27 @@
   \end{solution}
 \end{task}
 
-\begin{task}[title=Rozbor kódu, points=3, bloom=analýza, answer=dots, lines=2]
-  Co vypíše následující program?
+\begin{task}[title=Rozbor kódu, points=3, answer=dots, lines=2]
+  Co vypíší následující programy?
+  \begin{enumerate}
+    \item \verb|for i in range(3): print(i * i)|
+    \item \verb|for c in "abc": print(c.upper())|
+  \end{enumerate}
 
-  \begin{code}[Python]
-for i in range(3):
-    print(i * i)
-\end{code}
+  \begin{results}
+    \begin{enumerate}
+      \item 0, 1, 4;
+      \item A, B, C.
+    \end{enumerate}
+  \end{results}
 
   \begin{solution}
-    Vypíše čísla 0, 1 a 4, každé na samostatný řádek.
+    Každý program vypíše tři řádky: nejprve druhé mocniny čísel 0, 1 a 2,
+    potom písmena řetězce převedená na velká.
   \end{solution}
 \end{task}
 
-\begin{task}[points=5, stars=1, bloom=tvorba, answer=box, space=5cm]
+\begin{task}[points=5, stars=1, answer=box, space=5cm]
   Napište program, který vypíše všechna sudá čísla od 1 do 20.
 
   \begin{solution}

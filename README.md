@@ -8,12 +8,15 @@ zadání pro studenty a volitelně jako řešení pro vyučujícího.
 * úlohy se píší v jediném prostředí, které přijímá body, volitelný název,
   označení obtížnosti a volitelné místo na odpověď
 * řešení se píše přímo k úloze a do zadání se prostě nevysází
+* připomenutí, poznámky a stručné výsledky úloh se sázejí do rámečků;
+  body seznamu ve výsledcích jdou za sebou na řádku
 * hlavička je obyčejná šablona `.tex` se zástupnými symboly, takže vzhled listů
   lze změnit bez zásahu do programu
 * seznam balíčků a matematická makra jsou dva běžné soubory `.tex` kopírované
   do každého nového projektu, takže je lze rozšiřovat pro každý projekt zvlášť
 * `--a5` umístí dvě shodné kopie ve formátu A5 na jeden list A4 a šetří papír
-* `--no-answer-space` vysází zadání bez místa na odpověď
+* `--no-answer-space` vysází zadání bez místa na odpověď, `--no-results` bez
+  výsledků
 
 Vyžaduje **Python 3.8+** a distribuci TeXu s **pdflatex** (TeX Live, MiKTeX).
 Je-li k dispozici `latexmk`, použije se; jinak se `pdflatex` spustí třikrát.
@@ -154,6 +157,7 @@ Přeloží celý projekt, nebo jen uvedené pracovní listy -- `wsg build 3`,
 | `--macros <soubor>` | pro tento běh použije jiný soubor s makry |
 | `--no-solution` | vysází pouze zadání |
 | `--no-answer-space` | zadání bez místa na odpověď (volba `answer` se ignoruje) |
+| `--no-results` | zadání bez rámečků s výsledky (list s řešením je obsahuje vždy) |
 | `--a5` | dvě shodné kopie A5 každého listu na jedné stránce A4 |
 | `--keep-aux` | ponechá pomocné soubory překladu |
 | `-v, --verbose` | vypíše výstup překladu LaTeXu |
@@ -238,7 +242,6 @@ for i in range(3):
 | `title` | volitelný název úlohy |
 | `points` | body za úlohu; používá se desetinná tečka (`2.5`) |
 | `stars` | obtížnost: `1` vytiskne `*` za číslem úlohy, `2` vytiskne `**` |
-| `bloom` | poznámka pro vyučujícího, tiskne se pouze do listu s řešením |
 | `answer` | místo ponechané na odpověď: `none` (výchozí), `blank`, `lines`, `dots`, `box`, `grid` |
 | `lines` | počet řádků pro `answer=lines` a `answer=dots` (výchozí 4) |
 | `space` | výška pro `answer=blank`, `answer=box` a `answer=grid` (výchozí 4cm) |
@@ -259,20 +262,59 @@ blokem s názvem jednořádková legenda vysvětlující označení. Jakákoli j
 hodnota `stars` se vytiskne tak, jak je, takže funguje i `stars=+` nebo
 `stars=\dag`.
 
-Klíč `bloom` byl přidán kvůli úrovním Bloomovy taxonomie -- drží zamýšlenou
-kognitivní úroveň každé úlohy přímo u úlohy, a přitom zůstává studentům
-neviditelný:
-
-```latex
-\begin{task}[title=Vlastní protipříklad, stars=1, bloom=hodnocení]
-```
-
 ### Řešení
 
 Vše uvnitř `\begin{solution} ... \end{solution}` se objeví pouze v listu
 s řešením. V zadání LaTeX obsah stále zpracuje -- díky tomu uvnitř fungují
 výpisy kódu a verbatim materiál -- ale místo vysázení jej zahodí. Místo na
 odpověď se do listu s řešením nesází.
+
+### Připomenutí, poznámky a výsledky
+
+Tři rámečky doplňují úlohy o text, který se tiskne v zadání i v řešení:
+
+| prostředí | význam |
+| --- | --- |
+| `reminder` | připomenutí definice, věty nebo postupu před úlohami -- žluté pole s nadpisem *Připomenutí* |
+| `note` | poznámka pro studenty -- stejné pole s nadpisem *Poznámka* |
+| `results` | stručné výsledky úlohy -- tenký rámeček s nadpisem *Výsledky* |
+
+Volitelný argument doplní nadpis, `\begin{reminder}[Absolutní hodnota]`
+vysází *PŘIPOMENUTÍ · ABSOLUTNÍ HODNOTA*.
+
+```latex
+\begin{reminder}[Absolutní hodnota]
+  Výraz $|x-a|$ je vzdálenost bodů $x$ a $a$ na reálné ose.
+\end{reminder}
+
+\begin{task}
+  Vyřešte:
+  \begin{enumerate}
+    \item $|2x-3|=5$;
+    \item $|x+1|<3$.
+  \end{enumerate}
+
+  \begin{results}
+    \begin{enumerate}
+      \item $\{-1,4\}$;
+      \item $(-4,2)$.
+    \end{enumerate}
+  \end{results}
+
+  \begin{solution}
+    ...
+  \end{solution}
+\end{task}
+```
+
+Seznam `enumerate` uvnitř `results` se sází do řádku: body jdou za sebou jako
+v odstavci, takže výsledky deseti podúloh zaberou dva nebo tři řádky místo
+deseti. Popisky přebírá z nastavení `enumerate` -- po
+`\setlist[enumerate]{label=(\alph*)}` jsou to (a), (b), ... u podúloh
+i u výsledků. Má-li úloha místo na odpověď, vysází se před výsledky.
+
+Volba `wsg build --no-results` výsledky ze zadání vypustí; list s řešením je
+obsahuje vždy.
 
 ### Zdrojový kód
 
@@ -326,6 +368,7 @@ vloží do každého nového projektu, takže každý projekt může vypadat jin
 | `<<LANGUAGE>>` | `czech` / `english` |
 | `<<PAPER>>` `<<FONTSIZE>>` `<<MARGIN>>` | nastavení podle formátu papíru (A4 / A5) |
 | `<<SOLUTIONS>>` `<<GRADED>>` `<<CREDENTIALS>>` | `true` / `false`, používají je `\ifwsgSolutions` a spol. |
+| `<<ANSWER_SPACE>>` `<<RESULTS>>` | `true` / `false`, `false` při `--no-answer-space` / `--no-results` |
 | `<<PACKAGES>>` `<<MACROS>>` | `\input` seznamu balíčků a maker |
 | `<<GRADING_TABLE>>` | tabulka sestavená z `grading.txt`, prázdná, pokud soubor chybí |
 | `<<CONTENT>>` | tělo pracovního listu |
@@ -352,8 +395,9 @@ dostane jazyk a formát papíru:
 
 **`default-packages.tex`** načítá to, co pracovní list obvykle potřebuje: babel
 a `microtype`, `amsmath` / `amssymb` / `amsthm` / `mathtools`, `tikz`
-s obvyklými knihovnami a `pgfplots`, `booktabs`, `tabularx`, `enumitem`,
-`multicol`, `tcolorbox`, `listings` a jako poslední `hyperref`. Další balíček
+s obvyklými knihovnami a `pgfplots`, `booktabs`, `tabularx`, `enumitem`
+(s volbou `inline`, kterou potřebují výsledky), `multicol`, `tcolorbox`,
+`listings` a jako poslední `hyperref`. Další balíček
 přidáte dopsáním jednoho řádku `\usepackage` do kopie uvnitř projektu.
 
 **`default-macros.tex`** obsahuje matematické značení skript z Aplikované
@@ -364,6 +408,7 @@ lze ze skript přenést do pracovního listu beze změny:
 | --- | --- |
 | množiny | `\R \C \N \Q \Z \F`, `\set`, `\powset`, `\sizeof`, `\abs`, `\admid`, `\setcomplement` |
 | zobrazení | `\map`, `\dom`, `\image`, `\kernel`, `\Hom` |
+| funkce | `\tg`, `\cotg`, `\arctg`, `\arccotg`, `\sgn` |
 | lineární algebra | `\Dim`, `\Span`, `\Kan`, `\REF`, `\RREF`, `\rank`, `\transpose`, `\matrow`, `\matcol`, `\coord`, `\hommat` |
 | kódy | `\hweight`, `\hdist`, `\mindist` |
 | logika | `\NOT`, `\AND`, `\NAND`, `\OR`, `\NOR`, `\XOR`, `\character` |
@@ -371,7 +416,8 @@ lze ze skript přenést do pracovního listu beze změny:
 | ostatní | `\cmark`, `\xmark`, `\markred`, `\markblue`, `\circled`, `\problem`, `\bigO`, `\floor`, `\ceil` |
 
 Nic, co patří ke vzhledu listu, tam definováno není -- `task`, `solution`,
-místo na odpověď i styl stránky zůstávají v šabloně hlavičky.
+rámečky `reminder`, `note` a `results`, místo na odpověď i styl stránky
+zůstávají v šabloně hlavičky.
 
 Jednotlivý pracovní list může používat vlastní soubory prostřednictvím klíčů
 `packages` a `macros` ve svém `config.txt` a jeden běh lze přesměrovat volbami
