@@ -30,6 +30,7 @@ examples:
   wsg build --a5                      two A5 copies of each sheet on one A4 page
   wsg build --no-answer-space         assignment sheets without room for answers
   wsg build --no-results              assignment sheets without the results boxes
+  wsg build --no-number               no "Worksheet no. N" line above the title
 """
 
 
@@ -82,6 +83,7 @@ def command_build(args: argparse.Namespace) -> int:
         solutions=not args.no_solution,
         answer_space=not args.no_answer_space,
         results=not args.no_results,
+        number=not args.no_number,
         a5=args.a5,
         keep_aux=args.keep_aux,
         verbose=args.verbose,
@@ -233,6 +235,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-results",
         action="store_true",
         help="leave out the results boxes of the tasks in the assignment sheets",
+    )
+    build.add_argument(
+        "--no-number",
+        action="store_true",
+        help='leave out the "Worksheet no. N" line above the title (same as numbered = no)',
     )
     build.add_argument("--a5", action="store_true", help="two A5 copies of every sheet on one A4 page")
     build.add_argument("--keep-aux", action="store_true", help="keep the auxiliary files of the LaTeX run")
