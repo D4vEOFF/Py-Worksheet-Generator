@@ -11,6 +11,8 @@
 %    PAPER FONTSIZE MARGIN        -- paper dependent settings
 %    SOLUTIONS GRADED CREDENTIALS -- expand to true / false
 %    ANSWER_SPACE                 -- true / false, false drops the answer space
+%    RESULTS                      -- true / false, false drops the results
+%                                    boxes from the assignment sheet
 %    PACKAGES MACROS              -- input of default-packages / default-macros
 %    GRADING_TABLE                -- built from grading.txt, empty when missing
 %    CONTENT                      -- the worksheet body, i.e. the tasks file
@@ -33,6 +35,7 @@
 \newif\ifwsgGraded      \wsgGraded<<GRADED>>
 \newif\ifwsgCredentials \wsgCredentials<<CREDENTIALS>>
 \newif\ifwsgAnswerSpace \wsgAnswerSpace<<ANSWER_SPACE>>
+\newif\ifwsgResults     \wsgResults<<RESULTS>>
 
 % -----------------------------------------------------------------------------
 %  Packages -- the list lives in default-packages.tex of the project
@@ -40,13 +43,17 @@
 <<PACKAGES>>
 
 % -----------------------------------------------------------------------------
-%  Colours -- black with a single red accent, default roman font
+%  Colours -- black with a single red accent, default roman font; reminders
+%  and notes sit on a light yellow field
 % -----------------------------------------------------------------------------
 \definecolor{wsgAccent}{HTML}{111111}   % near black, headings and rules
 \definecolor{wsgLight}{HTML}{F0F0F0}    % grey fill
 \definecolor{wsgMuted}{HTML}{8A8A8A}    % secondary text
 \definecolor{wsgSolution}{HTML}{D81E05} % the one accent colour
 \definecolor{wsgRule}{HTML}{C8C8C8}     % answer lines / boxes
+\definecolor{wsgNoteBg}{HTML}{FFF6D1}   % reminder / note field
+\definecolor{wsgNoteBar}{HTML}{E8B500}  % reminder / note bar on the left
+\definecolor{wsgNoteLabel}{HTML}{8C6A00}% reminder / note label
 
 
 % -----------------------------------------------------------------------------
@@ -66,7 +73,9 @@
   \newcommand{\wsgLabelStarNote}{%
     Úlohy označené\ \wsgStarMark{1} jsou náročnější, úlohy označené\
     \wsgStarMark{2} rozšiřující.}
-  \newcommand{\wsgLabelBloom}{úroveň}
+  \newcommand{\wsgLabelReminder}{Připomenutí}
+  \newcommand{\wsgLabelNote}{Poznámka}
+  \newcommand{\wsgLabelResults}{Výsledky}
 }{%
   \newcommand{\wsgLabelWorksheet}{Worksheet}
   \newcommand{\wsgLabelNo}{no.}
@@ -81,7 +90,9 @@
   \newcommand{\wsgLabelStarNote}{%
     Tasks marked\ \wsgStarMark{1} are harder, tasks marked\
     \wsgStarMark{2} go beyond the syllabus.}
-  \newcommand{\wsgLabelBloom}{level}
+  \newcommand{\wsgLabelReminder}{Reminder}
+  \newcommand{\wsgLabelNote}{Note}
+  \newcommand{\wsgLabelResults}{Results}
 }
 
 % -----------------------------------------------------------------------------
@@ -204,7 +215,7 @@
 % -----------------------------------------------------------------------------
 %  Task environment
 %
-%    \begin{task}[title=..., points=3, stars=1, bloom=..., answer=lines, lines=5]
+%    \begin{task}[title=..., points=3, stars=1, answer=lines, lines=5]
 %       statement of the task
 %       \begin{solution}
 %          solution, printed in the solution sheet only
@@ -218,13 +229,15 @@
 %    space=<len>  height for answer=blank / answer=box / answer=grid
 %    stars=<n>    difficulty, printed as n asterisks behind the number; any
 %                 other value is printed as it stands (stars=+ works too)
-%    bloom=<text> note for the teacher, printed in the solution sheet only
 % -----------------------------------------------------------------------------
 \newcounter{wsgTaskCounter}
-\newcommand{\wsgPointSum}{0}
+% Starred, i.e. not \long: at the end of the document they are compared by
+% \ifx with the values read back from the .aux file, which are not \long
+% either -- otherwise a sheet without points or stars warns on every run.
+\newcommand*{\wsgPointSum}{0}
 \providecommand{\wsgTotalPoints}{?}
 \providecommand{\wsgAnyStars}{false}
-\newcommand{\wsgStarsSeen}{false}
+\newcommand*{\wsgStarsSeen}{false}
 
 % \wsgStarMark{1} -> *, \wsgStarMark{2} -> **, anything else is printed as is
 \newcommand{\wsgStarMark}[1]{%
@@ -240,7 +253,6 @@
 \define@key{wsgtask}{lines}{\def\wsg@task@lines{#1}}
 \define@key{wsgtask}{space}{\def\wsg@task@space{#1}}
 \define@key{wsgtask}{stars}{\def\wsg@task@stars{#1}}
-\define@key{wsgtask}{bloom}{\def\wsg@task@bloom{#1}}
 
 \newcommand{\wsg@answerspace}{%
   \ifdefstring{\wsg@task@answer}{blank}{\wsgAnswerBlank{\wsg@task@space}}{}%
@@ -250,12 +262,20 @@
   \ifdefstring{\wsg@task@answer}{grid}{\wsgAnswerGrid{\wsg@task@space}}{}%
 }
 
+% The answer space of the current task is printed at most once: at the end of
+% the task, or earlier, when a results box inside the task asks for it so that
+% the results come after the room for the answer.
+\newif\ifwsg@answerpending
+\newcommand{\wsg@flushanswerspace}{%
+  \ifwsg@answerpending
+    \global\wsg@answerpendingfalse
+    \ifwsgSolutions\else\ifwsgAnswerSpace\wsg@answerspace\fi\fi
+  \fi
+}
+
 % -----------------------------------------------------------------------------
 %  Shared bookkeeping of one task
 % -----------------------------------------------------------------------------
-% Separator between the points and the note for the teacher.
-\newcommand{\wsgRhsSep}{\quad}
-
 % Reads the options, advances the counter, adds up the points and builds
 % \wsg@task@rhs, i.e. the right hand side of the title line.
 \newcommand{\wsgTaskSetup}[1]{%
@@ -265,9 +285,9 @@
   \def\wsg@task@lines{4}%
   \def\wsg@task@space{4cm}%
   \def\wsg@task@stars{}%
-  \def\wsg@task@bloom{}%
   \setkeys{wsgtask}{#1}%
   \stepcounter{wsgTaskCounter}%
+  \global\wsg@answerpendingtrue
   \ifdefempty{\wsg@task@points}{}{%
     \xdef\wsgPointSum{\fpeval{\wsgPointSum+\wsg@task@points}}%
   }%
@@ -276,11 +296,6 @@
   \ifwsgGraded
     \ifdefempty{\wsg@task@points}{}{%
       \def\wsg@task@rhs{\wsg@task@points\,\wsgLabelPointsShort}}%
-  \fi
-  \ifwsgSolutions
-    \ifdefempty{\wsg@task@bloom}{}{%
-      \ifdefempty{\wsg@task@rhs}{}{\appto\wsg@task@rhs{\wsgRhsSep}}%
-      \appto\wsg@task@rhs{\wsgLabelBloom: \wsg@task@bloom}}%
   \fi
 }
 
@@ -315,7 +330,7 @@
   \par\nobreak\vspace{0.5em}%
   \noindent\ignorespaces
 }{%
-  \ifwsgSolutions\else\ifwsgAnswerSpace\wsg@answerspace\fi\fi
+  \wsg@flushanswerspace
   \par\addvspace{0.6em}%
 }
 \makeatother
@@ -344,6 +359,78 @@
     \par\egroup
   \fi
 }
+
+% -----------------------------------------------------------------------------
+%  Reminder, note and results -- yellow field, thin frame
+%
+%    \begin{reminder}[title] ... \end{reminder}  definition, theorem or method
+%                                                recalled before the tasks
+%    \begin{note}[title] ... \end{note}          remark for the students
+%    \begin{results}[title] ... \end{results}    short results of a task
+%
+%  The optional title is printed behind the label. All three boxes appear in
+%  both sheets; --no-results leaves the results out of the assignment sheet.
+%  Inside the results box every enumerate is set inline, so the results of
+%  the subtasks run on like a paragraph instead of taking a line each. Within
+%  a task with an answer space, the space is printed before the results.
+%  The boxes are short and never split -- a box that does not fit moves to
+%  the next page as a whole.
+% -----------------------------------------------------------------------------
+\tcbset{
+  wsgbox/.style={
+    enhanced, sharp corners, parbox=false,
+    left=3mm, right=3mm, top=2mm, bottom=2mm,
+    fontupper=\small
+  },
+  wsgnote/.style={
+    wsgbox, frame hidden, colback=wsgNoteBg,
+    borderline west={2.4pt}{0pt}{wsgNoteBar},
+    before skip=1.2em, after skip=1.2em
+  },
+  wsgresults/.style={
+    wsgbox, colback=white, colframe=wsgRule, boxrule=0.6pt,
+    before skip=0.8em, after skip=0.8em
+  }
+}
+
+\makeatletter
+% \wsg@boxheading{colour}{label}{title} -- first line of a box
+\newcommand{\wsg@boxheading}[3]{%
+  \noindent{\footnotesize\bfseries
+    \textcolor{#1}{\MakeUppercase{#2}}%
+    \ifstrempty{#3}{}{\ \textperiodcentered\ \MakeUppercase{#3}}}%
+  \par\nobreak
+}
+
+\newtcolorbox{reminder}[1][]{wsgnote,
+  before upper={\wsg@boxheading{wsgNoteLabel}{\wsgLabelReminder}{#1}}}
+\newtcolorbox{note}[1][]{wsgnote,
+  before upper={\wsg@boxheading{wsgNoteLabel}{\wsgLabelNote}{#1}}}
+
+% enumitem's inline enumerate* shares every setting of enumerate, the label
+% included, so the results are labelled like the subtasks they answer.
+\newcommand{\wsg@inlineenumerate}[1][]{%
+  \csname enumerate*\endcsname[mode=unboxed,itemjoin=\quad,#1]}
+
+\newcommand{\wsg@showresults}{%
+  \ifboolexpr{bool{wsgSolutions} or bool{wsgResults}}}
+
+\NewDocumentEnvironment{results}{O{}}{%
+  \wsg@showresults{%
+    \wsg@flushanswerspace
+    \tcolorbox[wsgresults,
+      before upper={\wsg@boxheading{wsgMuted}{\wsgLabelResults}{#1}}]%
+    \raggedright
+    \let\enumerate\wsg@inlineenumerate
+    \expandafter\let\expandafter\endenumerate\csname endenumerate*\endcsname
+  }{%
+    \setbox\wsgDiscardBox=\vbox\bgroup
+    \hbadness=10000 \vbadness=10000 \hfuzz=\maxdimen \vfuzz=\maxdimen
+  }%
+}{%
+  \wsg@showresults{\endtcolorbox}{\par\egroup}%
+}
+\makeatother
 
 % -----------------------------------------------------------------------------
 %  Grading table -- plain grid, no frame

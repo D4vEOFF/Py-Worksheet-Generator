@@ -41,7 +41,7 @@ Pipeline for one worksheet, `cli.py` → `project.py` → `builder.py` → `temp
 
 ### Where behaviour lives
 
-The Python side knows nothing about how a worksheet *looks*. `task`, `solution`, the answer-space commands, the page style and the localised labels are all defined in **`default-header.tex`**; the generator only fills placeholders. Adding a task option (e.g. a new `answer=` mode) is a header change, not a Python change. Conversely, adding a new placeholder means adding it to `_placeholder_values()` in `builder.py` *and* to the header — a placeholder used in the header but missing from the dict raises at build time.
+The Python side knows nothing about how a worksheet *looks*. `task`, `solution`, the `reminder` / `note` / `results` boxes, the answer-space commands, the page style and the localised labels are all defined in **`default-header.tex`**; the generator only fills placeholders. The results box turns every `enumerate` inside it into enumitem's inline `enumerate*`, which is why `default-packages.tex` loads enumitem with `inline`. Adding a task option (e.g. a new `answer=` mode) is a header change, not a Python change. Conversely, adding a new placeholder means adding it to `_placeholder_values()` in `builder.py` *and* to the header — a placeholder used in the header but missing from the dict raises at build time.
 
 `default-macros.tex` deliberately holds only mathematical notation (mirroring the [AM-skripta](https://github.com/D4vEOFF/AM-skripta) macros so tasks can be pasted over unchanged); nothing about layout belongs there.
 
