@@ -15,10 +15,12 @@
 % -----------------------------------------------------------------------------
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
 % provide=* lets recent versions of babel build the language from its own
 % data even when the old <language>.ldf file is missing from the installation.
 \usepackage[provide=*,<<LANGUAGE>>]{babel}
+% Times for the text -- newtx wants babel loaded first. The matching maths
+% font, newtxmath, comes with the mathematics below.
+\usepackage{newtxtext}
 \usepackage{microtype}
 \usepackage{csquotes}
 
@@ -28,11 +30,13 @@
 \usepackage[<<PAPER>>paper,margin=<<MARGIN>>,headheight=14pt,footskip=1.1\baselineskip]{geometry}
 
 % -----------------------------------------------------------------------------
-%  Mathematics
+%  Mathematics -- newtxmath has to follow amsthm, otherwise it stops with
+%  "Command \openbox already defined"
 % -----------------------------------------------------------------------------
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{newtxmath}
 \usepackage{mathtools}
 
 % -----------------------------------------------------------------------------

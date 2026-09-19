@@ -403,7 +403,8 @@ dostane jazyk a formát papíru:
 \usepackage[<<PAPER>>paper,margin=<<MARGIN>>,...]{geometry}
 ```
 
-**`default-packages.tex`** načítá to, co pracovní list obvykle potřebuje: babel
+**`default-packages.tex`** načítá to, co pracovní list obvykle potřebuje: písmo
+Times (`newtxtext` pro text, `newtxmath` pro matematiku), babel
 a `microtype`, `amsmath` / `amssymb` / `amsthm` / `mathtools`, `tikz`
 s obvyklými knihovnami a `pgfplots`, `booktabs`, `tabularx`, `enumitem`
 (s volbou `inline`, kterou potřebují výsledky), `multicol`, `tcolorbox`,
