@@ -373,9 +373,13 @@
 %  Inside the results box every enumerate is set inline, so the results of
 %  the subtasks run on like a paragraph instead of taking a line each. Within
 %  a task with an answer space, the space is printed before the results.
-%  The boxes are short and never split -- a box that does not fit moves to
-%  the next page as a whole.
+%  The results box never splits, a box that does not fit moves to the next
+%  page as a whole. A reminder or a note may hold a page of definitions, so
+%  it continues on the next page when needed -- but it starts on a new page
+%  when fewer than \wsgNoteMinSpace remain, so a short one is never torn.
 % -----------------------------------------------------------------------------
+\newlength{\wsgNoteMinSpace} \setlength{\wsgNoteMinSpace}{6\baselineskip}
+
 \tcbset{
   wsgbox/.style={
     enhanced, sharp corners, parbox=false,
@@ -383,7 +387,7 @@
     fontupper=\small
   },
   wsgnote/.style={
-    wsgbox, frame hidden, colback=wsgNoteBg,
+    wsgbox, breakable, frame hidden, colback=wsgNoteBg,
     borderline west={2.4pt}{0pt}{wsgNoteBar},
     before skip=1.2em, after skip=1.2em
   },
@@ -402,10 +406,22 @@
   \par\nobreak
 }
 
-\newtcolorbox{reminder}[1][]{wsgnote,
-  before upper={\wsg@boxheading{wsgNoteLabel}{\wsgLabelReminder}{#1}}}
-\newtcolorbox{note}[1][]{wsgnote,
-  before upper={\wsg@boxheading{wsgNoteLabel}{\wsgLabelNote}{#1}}}
+% \begin{wsg@notebox}{label}{title} -- the yellow field of reminder and note
+\newtcolorbox{wsg@notebox}[2]{wsgnote,
+  before upper={\wsg@boxheading{wsgNoteLabel}{#1}{#2}}}
+
+\NewDocumentEnvironment{reminder}{O{}}{%
+  \par\needspace{\wsgNoteMinSpace}%
+  \begin{wsg@notebox}{\wsgLabelReminder}{#1}%
+}{%
+  \end{wsg@notebox}%
+}
+\NewDocumentEnvironment{note}{O{}}{%
+  \par\needspace{\wsgNoteMinSpace}%
+  \begin{wsg@notebox}{\wsgLabelNote}{#1}%
+}{%
+  \end{wsg@notebox}%
+}
 
 % enumitem's inline enumerate* shares every setting of enumerate, the label
 % included, so the results are labelled like the subtasks they answer.
@@ -485,6 +501,9 @@
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.4em}
+% Where a paragraph cannot be set well, a looser line is better than one that
+% sticks out into the margin -- e.g. a row of graphs in minipages.
+\setlength{\emergencystretch}{2em}
 \setlist{topsep=0.2em,itemsep=0.2em,parsep=0pt}
 
 \makeatletter

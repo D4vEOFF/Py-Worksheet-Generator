@@ -316,6 +316,11 @@ i u výsledků. Má-li úloha místo na odpověď, vysází se před výsledky.
 Volba `wsg build --no-results` výsledky ze zadání vypustí; list s řešením je
 obsahuje vždy.
 
+Rámeček s výsledky se mezi stránky nedělí -- když se nevejde, přesune se celý
+na další. Připomenutí a poznámka mohou být dlouhé (třeba stránka definic),
+proto mohou na další stránce pokračovat; začínají ale rovnou na nové stránce,
+zbývá-li na té současné méně než šest řádků.
+
 ### Zdrojový kód
 
 Balíček `listings` je nastaven pro české znaky s diakritikou a pro zvýrazňování
